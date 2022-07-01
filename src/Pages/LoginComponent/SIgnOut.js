@@ -19,7 +19,7 @@ const SIgnOut = () => {
     const navigate = useNavigate();
 
     const navigateLogin = () => {
-        navigate('/todo');
+        navigate('/login');
     }
 
     if (loading || updating) {
