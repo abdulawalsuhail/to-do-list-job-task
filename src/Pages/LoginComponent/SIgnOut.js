@@ -1,53 +1,63 @@
 import React, { useState } from 'react';
-import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { Link, useNavigate } from 'react-router-dom';
+import { useCreateUserWithEmailAndPassword, useUpdateProfile } from 'react-firebase-hooks/auth';
+import SocialLogin from '../LoginComponent/SocialLogin';
 import auth from '../../firebase.init';
-import SocialLogin from '../SocialLogin/SocialLogin';
-import { Link } from "react-router-dom";
-import './SignOut.css'
-import Loading from '../Loading/Loading';
+import './SignUp.css'
+// import Loading from '../../Loading/Loading';
 
 const SIgnOut = () => {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    // const navigate = useNavigate();
+    const [agree, setAgree] = useState(false);
     const [
-        signInWithEmailAndPassword,
+        createUserWithEmailAndPassword,
         user,
         loading,
-    ] = useSignInWithEmailAndPassword(auth);
+        error,
+    ] = useCreateUserWithEmailAndPassword(auth);
+    const [updateProfile, updating, updateError] = useUpdateProfile(auth);
 
-    if (loading) {
-        return <Loading></Loading>
+    const navigate = useNavigate();
+
+    const navigateLogin = () => {
+        navigate('/todo');
     }
 
-    
+    if (loading || updating) {
+        // return <Loading></Loading>
+    }
 
-    const handleEmail = e => {
-        setEmail(e.target.value)
+    if (user) {
+        console.log(user);
     }
-    const handlePassword = e => {
-        setPassword(e.target.value)
-    }
-    const handleLogin = e => {
-        e.preventDefault()
-        signInWithEmailAndPassword(email, password)
+
+    const handleRegister = async (event) => {
+        event.preventDefault();
+        const name = event.target.name.value;
+        const email = event.target.email.value;
+        const password = event.target.password.value;
+
+        await createUserWithEmailAndPassword(email, password);
+        await updateProfile({ displayName: name });
+        console.log('Updated profile');
+        navigate('/home');
     }
     return (
-        <div>
-            <div className='login-form py-3'>
-            <h2 style={{ textAlign: 'center' }} className="text-secondary">Please Login</h2>
-            <form onSubmit={handleLogin}>
-                <input onBlur={handleEmail} type="email" name="email" id="" placeholder='Email Address' required />
+        <div className='signup-form'>
+            <h2 style={{ textAlign: 'center' }}>Please Sign Up</h2>
+            <form onSubmit={handleRegister}>
+                <input type="text" name="name" id="" placeholder='Your Name' />
 
-                <input onBlur={handlePassword} type="password" name="password" id="" placeholder='Password' required />
+                <input type="email" name="email" id="" placeholder='Email Address' required />
 
-                <input className='w-50 mx-auto btn btn-outline-secondary mt-2'
+                <input type="password" name="password" id="" placeholder='Password' required />
+                <input onClick={() => setAgree(!agree)} type="checkbox" name="terms" id="terms" />
+                <label className={`ps-2 ${agree ? '' : 'text-danger'}`} htmlFor="terms">Accept Terms and Conditions</label>
+                <input disabled={!agree} className='w-50 mx-auto btn btn-outline-secondary mt-2'
                     type="submit"
-                    value="Login" />
+                    value="Sign Up" />
             </form>
-            <p>Create a new user? <Link to="/signUp" className='text-success pe-auto text-decoration-none' >Please Sign Up</Link> </p>
-            <SocialLogin />
-        </div>
+            <p>Already have an account? <Link to="/login" className='text-success pe-auto text-decoration-none' onClick={navigateLogin}>Please Login</Link> </p>
+            <SocialLogin></SocialLogin>
         </div>
     );
 };

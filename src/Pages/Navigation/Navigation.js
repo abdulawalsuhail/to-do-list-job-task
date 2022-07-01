@@ -20,10 +20,13 @@ const Navigation = () => {
                         <Navbar.Text>
                             
                             {
-                                user && <Link to="/home" className='mx-2 button_Clr'>Home</Link>
+                                user && <Link to="/completedTask" className='mx-2 button_Clr'>Complete Task</Link>
                             }
                             {
-                                user && <Link to="/dashboard" className='mx-2 button_Clr'>DashBoard</Link>
+                                user && <Link to="/todo" className='mx-2 button_Clr'>TO DO</Link>
+                            }
+                            {
+                                user && <Link to="/calendar" className='mx-2 button_Clr'>Calendar</Link>
                             }
                             {
                                 user ? <button className='btn btn-outline-secondary' onClick={logout} >Sign Out</button> : <Link className='btn btn-outline-secondary' to="/login">Login</Link>
