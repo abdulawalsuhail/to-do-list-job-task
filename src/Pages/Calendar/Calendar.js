@@ -11,7 +11,7 @@ const Calender = () => {
     footer = <p>You picked {format(date, "PP")}.</p>;
   }
   return (
-    <div className=" min-h-screen">
+    <div className="min-h-screen">
       <div
         data-aos="zoom-out-down"
         className="flex md:flex-row flex-col justify-center items-center md:gap-10 gap-4 lg:w-5/6 mx-auto"
