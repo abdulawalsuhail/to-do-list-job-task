@@ -1,25 +1,35 @@
+import { signOut } from 'firebase/auth';
 import React from 'react';
-import { Navbar, Container, Nav } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Container, Navbar } from 'react-bootstrap';
+import { Link } from "react-router-dom";
+import auth from '../../firebase.init';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 const Navigation = () => {
+    const [user] = useAuthState(auth);
+
+    const logout = () => {
+        signOut(auth);
+    };
     return (
         <>
-            <Navbar bg="light" expand="lg">
+            <Navbar>
                 <Container>
-
-                    <Navbar.Brand href="/">Task App</Navbar.Brand>
-
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-
-                    <Navbar.Collapse id="basic-navbar-nav" className='justify-content-end'>
-                        <Nav>
-                            <Nav.Link className='text-dark'><Link className='text-dark' to="/todo">TO-DO</Link></Nav.Link>
-                            <Nav.Link className='text-dark'><Link className='text-dark' to="/completedTask">Completed Tasks</Link></Nav.Link>
-                            <Nav.Link className='text-dark' ><Link className='text-dark' to="/calendar">Calendar</Link></Nav.Link>
-                        </Nav>
+                    <Navbar.Toggle />
+                    <Navbar.Collapse className="justify-content-end">
+                        <Navbar.Text>
+                            
+                            {
+                                user && <Link to="/home" className='mx-2 button_Clr'>Home</Link>
+                            }
+                            {
+                                user && <Link to="/dashboard" className='mx-2 button_Clr'>DashBoard</Link>
+                            }
+                            {
+                                user ? <button className='btn btn-outline-secondary' onClick={logout} >Sign Out</button> : <Link className='btn btn-outline-secondary' to="/login">Login</Link>
+                            }
+                        </Navbar.Text>
                     </Navbar.Collapse>
-
                 </Container>
             </Navbar>
         </>
