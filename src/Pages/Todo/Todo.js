@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { BiEdit } from "react-icons/bi";
 import { BiMessageSquareAdd } from "react-icons/bi";
 import { useQuery } from "react-query";
-// import logo from "../../Assets/itu-1-removebg-preview.png";
+import logo from "../../assets/logo.png";
 import TaskModal from "./TaskModal";
 import UpdateModal from "./UpdateModal";
 import toast from "react-hot-toast";
 import { useAuthState } from "react-firebase-hooks/auth";
 import auth from "../../firebase.init";
+// import Spinner from "../../Shared/Spinner/Spinner";
 
 const Todo = () => {
   const [currentId, setCurrentId] = useState("");
@@ -56,18 +57,18 @@ const Todo = () => {
     // return <Spinner />;
   }
   return (
-    <div className="overflow-x-auto text-slate-300  min-h-screen">
+    <div className="overflow-x-auto  min-h-screen">
       <div
         data-aos="zoom-out"
-        className=" lg:w-8/12 mx-auto bg-slate-700 p-8 rounded-md mt-10 w-fit"
+        className=" lg:w-8/12 mx-auto bg-slate-300 p-8 rounded-md mt-10 w-fit"
       >
         {!tasks?.length && (
           <div>
-            <p className="text-2xl text-center">Please Add Your Task 🥰</p>
-            <img className="w-fit mx-auto" src="" alt="" />
+            <p className="text-3xl text-center">Please Add Your Task 🥰</p>
+            <img className="w-fit mx-auto" src={logo} alt="" />
             <label
               for="my-modal-6"
-              className="btn border-0 text-slate-100 bg-gradient-to-t from-purple-500 to-pink-600 hover:bg-gradient-to-t hover:from-pink-500 hover:to-purple-600 w-fit block mx-auto mb-1 -mt-4"
+              className="btn border-0  bg-gradient-to-t from-purple-500 to-pink-600 hover:bg-gradient-to-t hover:from-pink-500 hover:to-purple-600 w-fit block mx-auto mb-1 -mt-4"
             >
               <div className="flex gap-2 justify-center items-center pt-3">
                 ADD YOUR TASK <BiMessageSquareAdd className="text-2xl" />
@@ -79,7 +80,7 @@ const Todo = () => {
           <div>
             <label
               for="my-modal-6"
-              className="btn border-0 text-slate-100 bg-gradient-to-t from-purple-500 to-pink-600 hover:bg-gradient-to-t hover:from-pink-500 hover:to-purple-600 w-fit block ml-auto mb-1 -mt-4"
+              className="btn border-0  bg-gradient-to-t from-purple-500 to-pink-600 hover:bg-gradient-to-t hover:from-pink-500 hover:to-purple-600 w-fit block ml-auto mb-1 -mt-4"
             >
               <div className="flex gap-2 justify-center items-center pt-3">
                 ADD YOUR TASK <BiMessageSquareAdd className="text-2xl" />
@@ -131,7 +132,7 @@ const Todo = () => {
                       <label
                         for="my-modal-1"
                         onClick={() => setCurrentId(task?._id)}
-                        className="btn bg-gradient-to-t from-purple-500 to-pink-600 btn-sm rounded-full h-12 text-2xl text-slate-300 hover:bg-gradient-to-t hover:from-pink-500 hover:to-purple-600 "
+                        className="btn bg-gradient-to-t from-purple-500 to-pink-600 btn-sm rounded-full h-12 text-2xl  hover:bg-gradient-to-t hover:from-pink-500 hover:to-purple-600 "
                       >
                         <BiEdit />
                       </label>

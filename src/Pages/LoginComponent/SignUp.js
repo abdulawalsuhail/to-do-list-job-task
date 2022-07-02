@@ -1,56 +1,132 @@
-import React, { useState } from 'react';
-import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
-import auth from '../../firebase.init';
-import SocialLogin from '../LoginComponent/SocialLogin';
-import { Link, useNavigate } from "react-router-dom";
-import './SignUp.css'
-// import Loading from '../../Loading/Loading';
+import React, { useEffect, useState } from "react";
+import { FcGoogle } from "react-icons/fc";
+import {
+  useAuthState,
+  useCreateUserWithEmailAndPassword,
+  useSignInWithGoogle,
+  useUpdateProfile,
+} from "react-firebase-hooks/auth";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { useSendEmailVerification } from "react-firebase-hooks/auth";
+import auth from "../../firebase.init";
+import Loading from "../../Loading/Loading";
 
 const SignUp = () => {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const navigate = useNavigate();
-    const [
-        signInWithEmailAndPassword,
-        user,
-        loading,
-    ] = useSignInWithEmailAndPassword(auth);
+  const [createUserWithEmailAndPassword, eUser, loading, error] =
+    useCreateUserWithEmailAndPassword(auth);
+  const [updateProfile, updating, updateError] = useUpdateProfile(auth);
+  const [user] = useAuthState(auth);
+  let navigate = useNavigate();
+  let location = useLocation();
+  const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
+  const [sendEmailVerification, sending] = useSendEmailVerification(auth);
 
-    if (loading) {
-        // return <Loading></Loading>
+  let from = location.state?.from?.pathname || "/";
+
+  useEffect(() => {
+    if (user) {
+      navigate(from, { replace: true });
     }
+  }, [user, from, navigate]);
+  if (gLoading || loading || updating || sending) {
+    return <Loading />;
+  }
 
-    
-
-    const handleEmail = e => {
-        setEmail(e.target.value)
+  const handelSignUp = async (e) => {
+    e.preventDefault();
+    const name = e.target.name.value;
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    await createUserWithEmailAndPassword(email, password);
+    await updateProfile({ displayName: name });
+    await sendEmailVerification();
+    if (eUser) {
+      toast.success("user created successfully !");
     }
-    const handlePassword = e => {
-        setPassword(e.target.value)
-    }
-    const handleLogin = e => {
-        navigate('/todo')
-        e.preventDefault()
-        signInWithEmailAndPassword(email, password)
-    }
-    return (
-        <div>
-            <div className='signup-form py-3'>
-            <h2 style={{ textAlign: 'center' }} className="text-secondary">Please Login</h2>
-            <form onSubmit={handleLogin}>
-                <input onBlur={handleEmail} type="email" name="email" id="" placeholder='Email Address' required />
+    // if (error && !user) {
+    //   toast.error("User not crated");
+    // }
+    e.target.reset();
+  };
 
-                <input onBlur={handlePassword} type="password" name="password" id="" placeholder='Password' required />
-
-                <input className='w-50 mx-auto btn btn-outline-secondary mt-2'
-                    type="submit"
-                    value="Login" />
+  /* googleLogin */
+  const handelGoogleLogin = async (e) => {
+    e.preventDefault();
+    await signInWithGoogle();
+  };
+  return (
+    <div>
+      <div>
+        <div className="hero px-5 min-h-screen py-10 ">
+          <div className="card flex-shrink-0 w-full max-w-[455px] shadow-2xl bg-base-100">
+            <form onSubmit={handelSignUp} className="card-body">
+              <h3 className="text-[25px] font-semibold text-center mb-2">
+                Sign Up
+              </h3>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Name</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="Your name"
+                  name="name"
+                  required
+                  className="input input-bordered"
+                />
+              </div>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Email</span>
+                </label>
+                <input
+                  type="email"
+                  placeholder="email"
+                  name="email"
+                  required
+                  className="input input-bordered"
+                />
+              </div>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Password</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="password"
+                  name="password"
+                  required
+                  className="input input-bordered"
+                />
+              </div>
+              <div className="form-control mt-6">
+                <small className="text-red-500">{error?.message}</small>
+                <input
+                  className="btn btn-accent"
+                  type="submit"
+                  value="Sign Up"
+                />
+                <div className="flex justify-center items-center mt-2">
+                  <span>Already have an account? </span>
+                  <Link
+                    to="/login"
+                    className="text-secondary ml-1 cursor-pointer"
+                  >
+                    Please login
+                  </Link>
+                </div>
+              </div>
+              <div className="divider">OR</div>
+              <button onClick={handelGoogleLogin} className="btn btn-outline">
+                <FcGoogle className="text-3xl mr-5" /> CONTINUE WITH GOOGLE
+              </button>
             </form>
-            <p>Create a new user? <Link to="/signUp" className='text-success pe-auto text-decoration-none' >Please Sign Up</Link> </p>
-            <SocialLogin />
+          </div>
         </div>
-        </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default SignUp;

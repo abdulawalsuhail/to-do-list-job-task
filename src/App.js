@@ -1,26 +1,36 @@
 import './App.css';
 import Navigation from './Pages/Navigation/Navigation';
 import { Routes, Route } from 'react-router-dom';
-import ToDoList from './Pages/ToDoList/ToDoList';
 import CompletedTask from './Pages/CompletedTask/CompletedTask';
 import Calendar from './Pages/Calendar/Calendar';
 import Footer from './Pages/Footer/Footer';
-// import RequireAuth from './Pages/LoginComponent/RequireAuth';
 import SignUp from './Pages/LoginComponent/SignUp';
-import SIgnOut from './Pages/LoginComponent/SIgnOut';
+import { Toaster } from 'react-hot-toast';
+import Todo from './Pages/Todo/Todo';
+import Login from './Pages/LoginComponent/Login';
+import RequireAuth from './Pages/LoginComponent/RequireAuth';
 function App() {
   return (
     <div>
       <Navigation />
       <Routes>
-        <Route path='/' element={<ToDoList/>}/>
-        <Route path='/todo' element={<ToDoList/>}/>
+        <Route path='/' element={<RequireAuth>
+              <Todo />
+            </RequireAuth>} />
+        <Route path='/todo' element={<RequireAuth>
+          <Todo />
+        </RequireAuth>} />
         <Route path='/login' element={<SignUp />} />
-        <Route path='/signUp' element={<SIgnOut />} />
-        <Route path='/completedTask' element={<CompletedTask/>}/>
-        <Route path='/calendar' element={<Calendar/>}/>
+        <Route path='/signUp' element={<Login />} />
+        <Route path='/completedTask' element={<RequireAuth>
+          <CompletedTask />
+        </RequireAuth>} />
+        <Route path='/calendar' element={<RequireAuth>
+              <Calendar />
+            </RequireAuth>} />
       </Routes>
-      {/* <Footer/> */}
+      <Footer/>
+      <Toaster />
     </div>
   );
 }

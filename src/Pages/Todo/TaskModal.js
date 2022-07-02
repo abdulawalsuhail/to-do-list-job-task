@@ -35,7 +35,7 @@ const TaskModal = ({ refetch }) => {
       {/* <!-- The button to open modal --> */}
       <input type="checkbox" id="my-modal-6" className="modal-toggle" />
       <div className="modal modal-bottom sm:modal-middle">
-        <div className="modal-box bg-slate-700 ">
+        <div className="modal-box bg-slate-200 ">
           <label
             for="my-modal-6"
             className="btn btn-sm btn-circle absolute right-2 top-2 bg-gradient-to-t from-purple-500 to-pink-600 hover:bg-gradient-to-t hover:from-pink-500 hover:to-purple-600 text-white"
